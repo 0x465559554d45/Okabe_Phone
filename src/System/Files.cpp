@@ -7,16 +7,16 @@ struct iconFormat {
 };
 
 const iconFormat fileFormats[] = {
-    {LM_ICO_IMAGE, "|.png|.jpg|.jpeg|.bmp|.tga|.pic|.gif|.PNG|.JPG|.JPEG|.BMP|.TGA|.PIC|.GIF|"},
-    {LM_ICO_AUDIO, "|.wav|.mp3|.m4a|.flac|.WAV|.MP3|.M4A|.FLAC|"},
-    {LM_ICO_THEME, "|.nph|.NPH|"},
-    {LM_ICO_TEXT, "|.md|.txt|.MD|.TXT|"},
-    {LM_ICO_PACKAGE, "|.lpkg|.LPKG|"},
+    {LM_ICO_IMAGE, "|.PNG|.JPG|.JPEG|.BMP|.TGA|.PIC|.GIF|"},
+    {LM_ICO_AUDIO, "|.WAV|.MP3|.M4A|.FLAC|"},
+    {LM_ICO_THEME, "|.NPH|"},
+    {LM_ICO_TEXT, "|.MD|.TXT|"},
+    {LM_ICO_PACKAGE, "|.LPKG|"},
     {0, ""},
 };
 
 uint8_t getIconByFormat(NString name) {
-    NString format = name.substring(name.lastIndexOf('.'), name.length());
+    NString format = name.toUpperCase().substring(name.lastIndexOf('.'), name.length());
     char formatCA[6];
     format.toCharArray(formatCA, 5);
     for (size_t i = 0; i < sizeof(fileFormats) / sizeof(fileFormats[0]); i++) {
@@ -73,8 +73,8 @@ NString fileBrowser(NString path, NString format, bool graphical, NString title,
             else {
                 bool show = false;
                 if (format == "*" || format.isEmpty()) { show = true; }
-                else if (NString(name).endsWith(format)) { show = true; }
-                else if (format.indexOf("|" + name.substr(name.find_last_of('.')) + "|") != -1) {
+                else if (NString(name).toUpperCase().endsWith(format)) { show = true; }
+                else if (format.indexOf("|" + NString(name.substr(name.find_last_of('.'))).toUpperCase() + "|") != -1) {
                     show = true;
                 }
 
