@@ -5,6 +5,11 @@
 #ifdef WiFi_h
 
 void WifiPrompt(NString ssid, uint8_t encryptionType, NString password = NString()) {
+    if (ssid != "") {
+        preferences.begin("WLAN");
+        password = preferences.getString(ssid.c_str());
+        preferences.end();
+    }
     std::vector<FIELD> fields = {
         FIELD(getTranslation(TextKey::WIFI_SSID), ssid, false),
         FIELD(getTranslation(TextKey::WIFI_PASSWORD), password, false),
@@ -34,7 +39,12 @@ void WifiPrompt(NString ssid, uint8_t encryptionType, NString password = NString
         case WL_SCAN_COMPLETED:
             errorResult = getTranslation(TextKey::IW_WIFI_ERR_SCAN_COMPLETED);
             break;
-        case WL_CONNECTED: errorResult = getTranslation(TextKey::IW_WIFI_CONNECTED); break;
+        case WL_CONNECTED: 
+            errorResult = getTranslation(TextKey::IW_WIFI_CONNECTED);
+            preferences.begin("WLAN");
+            preferences.putString(ssid.c_str(), password.c_str());
+            preferences.end();
+            break;
         case WL_CONNECT_FAILED:
             errorResult = getTranslation(TextKey::IW_WIFI_ERR_CONN_FAIL);
             break;
@@ -147,7 +157,7 @@ void HotspotSettings() {
         switch (choice) {
         case 0: break;
         }
-    }
+    } 
 }
 #endif
 
