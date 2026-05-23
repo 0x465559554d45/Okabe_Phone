@@ -14,7 +14,7 @@ struct HTTPHeader {
 const char * sendRequest(NString URL, HTTPMethod method, HTTPHeader headers[] = nullptr) {
     HTTPClient http;
     http.begin(URL.c_str());
-    http.setUserAgent("Nergon Mobile/0.4 SG01");
+    http.setUserAgent("Nergon Mobile/0.2 SG01");
     if (headers != nullptr)
         for (int i = 0; i < sizeof(headers)/sizeof(headers[0]); i++)
             http.addHeader(headers[i].name, headers[i].value, headers[i].first, headers[i].replace);
