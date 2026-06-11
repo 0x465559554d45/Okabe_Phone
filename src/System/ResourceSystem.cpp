@@ -11,9 +11,9 @@ void ResourceSystem::Init(NFile *Main, bool _important) {
     free(cache);
     cache = nullptr;
     Images.clear();
-    ZipFileProvider *zfp = new ZipFileProvider();
+    ZipFileProvider *zfp = nullptr;
     if (NString(Main->name()).endsWith(".npz")) {
-
+        zfp     = new ZipFileProvider();
         int res = zfp->openZip(Main);
         if (res) {
             ESP_LOGE("ZIP", "opening zip failed with code %d", res);
@@ -151,11 +151,6 @@ bool ResourceSystem::DrawImage(uint16_t id, uint8_t index, Coords pos, Coords st
 }
 bool ResourceSystem::DrawImage(Image image, uint8_t index, Coords pos, Coords startpos,
                                Coords endpos) {
-
-    if (image.buffer) { image.type = RES_POINTER; }
-    else if (image.id != R_NULL_IMAGE) { image.type = RES_RESFILE; }
-    else if (image.source) { image.type = RES_ADDRFILE; }
-    else { image.type = RES_NULLU8; }
     switch (image.type) {
     case RES_NULLU8: return false;
     case RES_RESFILE: return DrawImage(image.id, index, pos, startpos, endpos);
@@ -172,7 +167,9 @@ bool ResourceSystem::DrawImage(Image image, uint8_t index, Coords pos, Coords st
         if (imgBuf.freeNeeded) { free(imgBuf.pointer); }
         return true;
     }
-    default: return false;
+    default:
+        ESP_LOGE("RES", "UNKNOWN IMAGE TYPE!!! %d id %d buffer %p", image.type,image.id, image.buffer);
+        return false;
     }
     return DrawImage(image.id, index, pos, startpos, endpos);
 }
@@ -247,5 +244,3 @@ void ResourceSystem::CopyToRam(bool checksum) {
 }
 
 ResourceSystem res;
-
-

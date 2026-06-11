@@ -1,9 +1,9 @@
 #pragma once
 #include "Audio.h"
-#ifdef __linux__
+#ifdef PC
 #include <SDL2/SDL.h>
 
-class SDLAudio : public Audio {
+class SDLAudio : public AudioSource {
   public:
     SDLAudio();
     ~SDLAudio() override;
