@@ -31,4 +31,5 @@ const char * sendRequest(NString URL, HTTPMethod method, HTTPHeader headers[] = 
         }
         case POST : { break; } // POST request has already been handled above
     }
+    return nullptr;
 }
