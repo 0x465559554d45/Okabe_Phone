@@ -25,7 +25,7 @@ void HTML_text::render(uint16_t offset_x, uint16_t offset_y,
                        bool overrideAll) {
     HTML_style curStyle = style; // Use a different variable for the style so that it doesn't overwrite the original one
     if(style_override)
-        applyOverrideStyle(style_override, &curStyle);
+        applyOverrideStyle(style_override, &curStyle, overrideAll);
 
     // We don't need to set a viewport, but we need this to not render outside of the rendering window
     Viewport view = tft.getViewport();
@@ -66,6 +66,7 @@ void HTML_text::render(uint16_t offset_x, uint16_t offset_y,
     uint16_t curY2 = tft.getCursorY();
 
     if(curStyle.definedColors&BOLD) {
+        tft.setTextColor(curStyle.color, (uint16_t)0U, false);
         tft.setCursor(curX1+1, curY1+(curStyle.definedColors&SUBSCRIPT?18:0));
         tft.print(content);
     }
@@ -103,7 +104,7 @@ void HTML_P::render(uint16_t offset_x, uint16_t offset_y,
 
     HTML_style curStyle = style;
     if(style_override)
-        applyOverrideStyle(style_override, &curStyle);
+        applyOverrideStyle(style_override, &curStyle, overrideAll);
 
     for(unsigned int i = 0; i < content.size(); i++)
         content[i]->render(0, 0, renderWindow, style_override, overrideAll);
